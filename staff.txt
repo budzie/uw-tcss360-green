@@ -14,3 +14,7 @@ Jason Thomas IV,jthomas,1584,writer
 John Porter,jporter,6752,writer
 Administrator,admin,1234,administrator
 Writer,writer,1234,writer
+Sally,sbudack,1234,writer
+Sally,sbudack,4321,administrator
+Robert,rogden,1234,writer
+Robert,rogden,4321,administrator
