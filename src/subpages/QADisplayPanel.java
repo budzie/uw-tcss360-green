@@ -10,11 +10,9 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -22,17 +20,23 @@ import javax.swing.event.DocumentListener;
 import model.QA;
 
 public class QADisplayPanel extends JPanel {
+	
+	private static final Font CATEGORY_FONT = new Font(Font.SANS_SERIF, Font.BOLD, 20);
+	
+	private static final Font LABEL_FONT = new Font(Font.SERIF, Font.PLAIN, 20);
+	
+	private static final Dimension MAX_ELEMENT_SIZE = new Dimension(300, 1000);
 
 	private final EditPage myParent;
 
 	private final QA myResponse;
-	
+
 	private String myCategory;
-	
+
 	private String myQuestion;
-	
+
 	private String myAnswer;
-	
+
 	private String myKeywords;
 
 	public QADisplayPanel(final EditPage parent, final QA response) {
@@ -45,24 +49,21 @@ public class QADisplayPanel extends JPanel {
 		myKeywords = myResponse.getKeywordString();
 		addLeftPanel();
 		addCenterPanel();
-//		setPreferredSize(new Dimension(300, 300));
-		setMaximumSize(new Dimension(400, 1000));
 	}
 
 	private void addLeftPanel() {
+		final JPanel masterLeftPanel = new JPanel();
 		final JPanel leftPanel = new JPanel();
 		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
 		final JButton editButton = new JButton("Edit");
-		editButton.setHorizontalAlignment(JButton.CENTER);
-		editButton.setAlignmentX(LEFT_ALIGNMENT);
+		editButton.setAlignmentX(CENTER_ALIGNMENT);
 		editButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				new EditingPane();
 			}
 		});
 		final JButton deleteButton = new JButton("Delete");
-		deleteButton.setHorizontalAlignment(JButton.CENTER);
-		deleteButton.setAlignmentX(LEFT_ALIGNMENT);
+		deleteButton.setAlignmentX(CENTER_ALIGNMENT);
 		deleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				myParent.deleteResponse(myResponse);
@@ -73,56 +74,58 @@ public class QADisplayPanel extends JPanel {
 		leftPanel.add(Box.createVerticalStrut(10));
 		leftPanel.add(deleteButton);
 		leftPanel.add(Box.createVerticalGlue());
-		add(leftPanel, BorderLayout.WEST);
+		masterLeftPanel.add(leftPanel);
+		add(masterLeftPanel, BorderLayout.WEST);
 	}
 
 	private void addCenterPanel() {
 		final JPanel centerPanel = new JPanel();
-		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.PAGE_AXIS));
-		final JLabel category = new JLabel("Category: "
-				+ myCategory);
-		category.setFont(new Font(Font.SERIF, Font.BOLD, 20));
-//		category.setAlignmentX(JLabel.RIGHT_ALIGNMENT);
-		final JLabel questionLabel = new JLabel("Question");
-		questionLabel.setFont(new Font(Font.SERIF, Font.BOLD, 20));
-//		questionLabel.setAlignmentX(JLabel.LEFT_ALIGNMENT);
-		final JTextArea question = new JTextArea(myQuestion);
-		question.setMaximumSize(new Dimension(300, 1000));
-		question.setWrapStyleWord(true);
-	    question.setLineWrap(true);
-	    question.setOpaque(false);
-	    question.setEditable(false);
-	    question.setFocusable(false);
-	    question.setBackground(UIManager.getColor("Label.background"));
-	    question.setFont(UIManager.getFont("Label.font"));
-	    question.setBorder(UIManager.getBorder("Label.border"));
-		final JLabel answerLabel = new JLabel("Answer");
-		answerLabel.setFont(new Font(Font.SERIF, Font.BOLD, 20));
-//		answerLabel.setAlignmentX(JLabel.LEFT_ALIGNMENT);
-		final JTextArea answer = new JTextArea(myAnswer);
-		answer.setMaximumSize(new Dimension(300, 1000));
-		answer.setWrapStyleWord(true);
-	    answer.setLineWrap(true);
-	    answer.setOpaque(false);
-	    answer.setEditable(false);
-	    answer.setFocusable(false);
-	    answer.setBackground(UIManager.getColor("Label.background"));
-	    answer.setFont(UIManager.getFont("Label.font"));
-	    answer.setBorder(UIManager.getBorder("Label.border"));
-		final JLabel keywordLabel = new JLabel("Keywords");
-		keywordLabel.setFont(new Font(Font.SERIF, Font.BOLD, 20));
-//		keywordLabel.setAlignmentX(JLabel.LEFT_ALIGNMENT);
-		final JLabel keywords = new JLabel(myKeywords);
+		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+		final JTextArea category = createTextElement("Category: " + myCategory,
+				CATEGORY_FONT);
+		final JTextArea questionLabel = createTextElement("Question", new Font(
+				Font.SERIF, Font.PLAIN, 20));
+		final JTextArea question = createTextElement(myQuestion, null);
+		final JTextArea answerLabel = createTextElement("Answer", LABEL_FONT);
+		final JTextArea answer = createTextElement(myAnswer, null);
+		final JTextArea keywordLabel = createTextElement("Keywords", LABEL_FONT);
+		final JTextArea keywords = createTextElement(myKeywords, null);
 		centerPanel.add(category);
+		centerPanel.add(Box.createVerticalStrut(15));
 		centerPanel.add(questionLabel);
 		centerPanel.add(question);
+		centerPanel.add(Box.createVerticalStrut(15));
 		centerPanel.add(answerLabel);
 		centerPanel.add(answer);
+		centerPanel.add(Box.createVerticalStrut(15));
 		centerPanel.add(keywordLabel);
 		centerPanel.add(keywords);
 		add(centerPanel, BorderLayout.CENTER);
 	}
 	
+	private JTextArea createTextArea(final String text, final Font font) {
+		final JTextArea result = new JTextArea(text);
+		result.setMaximumSize(MAX_ELEMENT_SIZE);
+		result.setWrapStyleWord(true);
+		result.setLineWrap(true);
+		if (font == null) {
+			result.setFont(UIManager.getFont("Label.font"));
+		} else {
+			result.setFont(font);
+		}
+		return result;
+	}
+
+	private JTextArea createTextElement(final String text, final Font font) {
+		final JTextArea result = createTextArea(text, font);
+		result.setOpaque(false);
+		result.setEditable(false);
+		result.setFocusable(false);
+		result.setBackground(UIManager.getColor("Label.background"));
+		result.setBorder(UIManager.getBorder("Label.border"));
+		return result;
+	}
+
 	private void repaintDisplayPanel() {
 		repaint();
 	}
@@ -135,107 +138,98 @@ public class QADisplayPanel extends JPanel {
 			setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			addContent();
 			pack();
-			setResizable(false);
+			setLocationRelativeTo(null);
+//			setResizable(false);
 			setVisible(true);
 		}
 
 		private void addContent() {
-			final JLabel categoryLabel = new JLabel("Question");
-			categoryLabel.setFont(new Font(Font.SERIF, Font.BOLD, 12));
-			categoryLabel.setHorizontalAlignment(JLabel.CENTER);
-			final JTextField categoryField = new JTextField(myCategory);
-			categoryField.getDocument().addDocumentListener(new DocumentListener() {
-				public void changedUpdate(DocumentEvent arg0) {
-					update();					
-				}
+			final JTextArea categoryLabel = createTextElement("Category", LABEL_FONT);
+			final JTextArea categoryField = createTextArea(myCategory, null);
+			categoryField.getDocument().addDocumentListener(
+					new DocumentListener() {
+						public void changedUpdate(DocumentEvent arg0) {
+							update();
+						}
 
-				public void insertUpdate(DocumentEvent arg0) {
-					update();
-				}
+						public void insertUpdate(DocumentEvent arg0) {
+							update();
+						}
 
-				public void removeUpdate(DocumentEvent arg0) {
-					update();
-				}
-				
-				private void update() {
-					myCategory = categoryField.getText();
-				}
-			});
-			final JLabel questionLabel = new JLabel("Question");
-			questionLabel.setFont(new Font(Font.SERIF, Font.BOLD, 12));
-			questionLabel.setHorizontalAlignment(JLabel.CENTER);
-			final JTextArea questionArea = new JTextArea(
-					myQuestion);
-			questionArea.getDocument().addDocumentListener(new DocumentListener() {
-				public void changedUpdate(DocumentEvent arg0) {
-					update();					
-				}
+						public void removeUpdate(DocumentEvent arg0) {
+							update();
+						}
 
-				public void insertUpdate(DocumentEvent arg0) {
-					update();
-				}
+						private void update() {
+							myCategory = categoryField.getText();
+						}
+					});
+			final JTextArea questionLabel = createTextElement("Question", LABEL_FONT);
+			final JTextArea questionArea = createTextArea(myQuestion, null);
+			questionArea.getDocument().addDocumentListener(
+					new DocumentListener() {
+						public void changedUpdate(DocumentEvent arg0) {
+							update();
+						}
 
-				public void removeUpdate(DocumentEvent arg0) {
-					update();
-				}
-				
-				private void update() {
-					myQuestion = questionArea.getText();
-				}
-			});
-			final JScrollPane questionPane = new JScrollPane(questionArea,
-					JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-					JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-			final JLabel answerLabel = new JLabel("Answer");
-			answerLabel.setFont(new Font(Font.SERIF, Font.BOLD, 12));
-			answerLabel.setHorizontalAlignment(JLabel.CENTER);
-			final JTextArea answerArea = new JTextArea(myAnswer);
-			answerArea.getDocument().addDocumentListener(new DocumentListener() {
-				public void changedUpdate(DocumentEvent arg0) {
-					update();					
-				}
+						public void insertUpdate(DocumentEvent arg0) {
+							update();
+						}
 
-				public void insertUpdate(DocumentEvent arg0) {
-					update();
-				}
+						public void removeUpdate(DocumentEvent arg0) {
+							update();
+						}
 
-				public void removeUpdate(DocumentEvent arg0) {
-					update();
-				}
-				
-				private void update() {
-					myAnswer = answerArea.getText();
-				}
-			});
-			final JScrollPane answerPane = new JScrollPane(answerArea,
-					JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-					JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-			final JLabel keywordLabel = new JLabel("Keywords (Separated by Commas)");
-			keywordLabel.setFont(new Font(Font.SERIF, Font.BOLD, 12));
-			keywordLabel.setHorizontalAlignment(JLabel.CENTER);
-			final JTextField keywordField = new JTextField(myKeywords);
-			keywordField.getDocument().addDocumentListener(new DocumentListener() {
-				public void changedUpdate(DocumentEvent arg0) {
-					update();					
-				}
+						private void update() {
+							myQuestion = questionArea.getText();
+						}
+					});
+			final JTextArea answerLabel = createTextElement("Answer", LABEL_FONT);
+			final JTextArea answerArea = createTextArea(myAnswer, null);
+			answerArea.getDocument().addDocumentListener(
+					new DocumentListener() {
+						public void changedUpdate(DocumentEvent arg0) {
+							update();
+						}
 
-				public void insertUpdate(DocumentEvent arg0) {
-					update();
-				}
+						public void insertUpdate(DocumentEvent arg0) {
+							update();
+						}
 
-				public void removeUpdate(DocumentEvent arg0) {
-					update();
-				}
-				
-				private void update() {
-					myKeywords = answerArea.getText();
-				}
-			});
+						public void removeUpdate(DocumentEvent arg0) {
+							update();
+						}
+
+						private void update() {
+							myAnswer = answerArea.getText();
+						}
+					});
+			final JTextArea keywordLabel = createTextElement("Keywords (Separated by Commas)", LABEL_FONT);
+			final JTextArea keywordField = createTextArea(myKeywords, null);
+			keywordField.getDocument().addDocumentListener(
+					new DocumentListener() {
+						public void changedUpdate(DocumentEvent arg0) {
+							update();
+						}
+
+						public void insertUpdate(DocumentEvent arg0) {
+							update();
+						}
+
+						public void removeUpdate(DocumentEvent arg0) {
+							update();
+						}
+
+						private void update() {
+							myKeywords = answerArea.getText();
+						}
+					});
 			final JPanel buttonPanel = new JPanel();
 			final JButton saveButton = new JButton("Save");
 			saveButton.addActionListener(new ActionListener() {
 				public void actionPerformed(final ActionEvent e) {
-					final QA updated = new QA(myCategory, myQuestion, myAnswer, myKeywords);
+					final QA updated = new QA(myCategory, myQuestion, myAnswer,
+							myKeywords);
 					myParent.replace(myResponse, updated);
 					repaintDisplayPanel();
 					dispose();
@@ -253,13 +247,19 @@ public class QADisplayPanel extends JPanel {
 			masterPanel.setLayout(new BoxLayout(masterPanel, BoxLayout.Y_AXIS));
 			masterPanel.add(categoryLabel);
 			masterPanel.add(categoryField);
+			masterPanel.add(Box.createVerticalStrut(10));
 			masterPanel.add(questionLabel);
-			masterPanel.add(questionPane);
+			masterPanel.add(questionArea);
+			masterPanel.add(Box.createVerticalStrut(10));
 			masterPanel.add(answerLabel);
-			masterPanel.add(answerPane);
+			masterPanel.add(answerArea);
+			masterPanel.add(Box.createVerticalStrut(10));
 			masterPanel.add(keywordLabel);
 			masterPanel.add(keywordField);
+			masterPanel.add(Box.createVerticalStrut(10));
+			masterPanel.add(new JSeparator());
 			masterPanel.add(buttonPanel);
+			System.out.println(masterPanel.getPreferredSize());
 			add(masterPanel);
 		}
 
