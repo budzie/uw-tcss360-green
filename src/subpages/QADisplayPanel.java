@@ -45,7 +45,8 @@ public class QADisplayPanel extends JPanel {
 		myKeywords = myResponse.getKeywordString();
 		addLeftPanel();
 		addCenterPanel();
-		setPreferredSize(new Dimension(300, 300));
+//		setPreferredSize(new Dimension(300, 300));
+		setMaximumSize(new Dimension(400, 1000));
 	}
 
 	private void addLeftPanel() {
@@ -53,6 +54,7 @@ public class QADisplayPanel extends JPanel {
 		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
 		final JButton editButton = new JButton("Edit");
 		editButton.setHorizontalAlignment(JButton.CENTER);
+		editButton.setAlignmentX(LEFT_ALIGNMENT);
 		editButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				new EditingPane();
@@ -60,6 +62,7 @@ public class QADisplayPanel extends JPanel {
 		});
 		final JButton deleteButton = new JButton("Delete");
 		deleteButton.setHorizontalAlignment(JButton.CENTER);
+		deleteButton.setAlignmentX(LEFT_ALIGNMENT);
 		deleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				myParent.deleteResponse(myResponse);
@@ -75,15 +78,16 @@ public class QADisplayPanel extends JPanel {
 
 	private void addCenterPanel() {
 		final JPanel centerPanel = new JPanel();
-		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.PAGE_AXIS));
 		final JLabel category = new JLabel("Category: "
 				+ myCategory);
-		category.setFont(new Font(Font.SERIF, Font.BOLD, 12));
-//		category.setHorizontalAlignment(JLabel.CENTER);
+		category.setFont(new Font(Font.SERIF, Font.BOLD, 20));
+//		category.setAlignmentX(JLabel.RIGHT_ALIGNMENT);
 		final JLabel questionLabel = new JLabel("Question");
-		questionLabel.setFont(new Font(Font.SERIF, Font.BOLD, 12));
-//		questionLabel.setHorizontalAlignment(JLabel.CENTER);
-		final JTextArea question = new JTextArea(myQuestion, 5, 20);
+		questionLabel.setFont(new Font(Font.SERIF, Font.BOLD, 20));
+//		questionLabel.setAlignmentX(JLabel.LEFT_ALIGNMENT);
+		final JTextArea question = new JTextArea(myQuestion);
+		question.setMaximumSize(new Dimension(300, 1000));
 		question.setWrapStyleWord(true);
 	    question.setLineWrap(true);
 	    question.setOpaque(false);
@@ -93,9 +97,10 @@ public class QADisplayPanel extends JPanel {
 	    question.setFont(UIManager.getFont("Label.font"));
 	    question.setBorder(UIManager.getBorder("Label.border"));
 		final JLabel answerLabel = new JLabel("Answer");
-		answerLabel.setFont(new Font(Font.SERIF, Font.BOLD, 12));
-//		answerLabel.setHorizontalAlignment(JLabel.CENTER);
-		final JTextArea answer = new JTextArea(myAnswer, 5, 20);
+		answerLabel.setFont(new Font(Font.SERIF, Font.BOLD, 20));
+//		answerLabel.setAlignmentX(JLabel.LEFT_ALIGNMENT);
+		final JTextArea answer = new JTextArea(myAnswer);
+		answer.setMaximumSize(new Dimension(300, 1000));
 		answer.setWrapStyleWord(true);
 	    answer.setLineWrap(true);
 	    answer.setOpaque(false);
@@ -105,8 +110,8 @@ public class QADisplayPanel extends JPanel {
 	    answer.setFont(UIManager.getFont("Label.font"));
 	    answer.setBorder(UIManager.getBorder("Label.border"));
 		final JLabel keywordLabel = new JLabel("Keywords");
-		keywordLabel.setFont(new Font(Font.SERIF, Font.BOLD, 12));
-		keywordLabel.setHorizontalAlignment(JLabel.CENTER);
+		keywordLabel.setFont(new Font(Font.SERIF, Font.BOLD, 20));
+//		keywordLabel.setAlignmentX(JLabel.LEFT_ALIGNMENT);
 		final JLabel keywords = new JLabel(myKeywords);
 		centerPanel.add(category);
 		centerPanel.add(questionLabel);
@@ -127,10 +132,11 @@ public class QADisplayPanel extends JPanel {
 		public EditingPane() {
 			super();
 			setTitle("Edit Response");
-			setDefaultCloseOperation(JDialog.EXIT_ON_CLOSE);
+			setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			addContent();
 			pack();
 			setResizable(false);
+			setVisible(true);
 		}
 
 		private void addContent() {

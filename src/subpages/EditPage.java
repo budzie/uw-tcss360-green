@@ -2,9 +2,11 @@ package subpages;
 
 import java.awt.Dimension;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 
 import model.Library;
 import model.QA;
@@ -29,6 +31,9 @@ public class EditPage extends JPanel {
 		listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
 		for (QA response : myLibrary.getAllResponses()) {
 			listPanel.add(new QADisplayPanel(this, response));
+			listPanel.add(Box.createVerticalStrut(20));
+			listPanel.add(new JSeparator());
+			listPanel.add(Box.createVerticalStrut(20));
 		}
 		final JScrollPane scroll = new JScrollPane(
 				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
