@@ -81,7 +81,7 @@ public class GUI extends JFrame {
 	 * application. This reference is kept to allow easy access for calling
 	 * other cards to be shown.
 	 */
-	private JPanel myContentPanel;
+	private final JPanel myContentPanel;
 
 	/**
 	 * A reference to the User currently logged into the application.
@@ -104,9 +104,10 @@ public class GUI extends JFrame {
 		myAnalystOnlyComponents = new ArrayList<Component>();
 		myCardLayout = new CardLayout();
 		myLibrary = library;
+		myContentPanel = addContent();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(SIZE);
-		setResizable(false);
+		pack();
+//		setResizable(false);
 		setLocationRelativeTo(null);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(final WindowEvent event) {
@@ -131,7 +132,7 @@ public class GUI extends JFrame {
 	public void setUser(final User user, final JFrame loadingScreen) {
 		myUser = user;
 		myAdminStatus = myUser.isAdmin();
-		myContentPanel = addContent();
+		add(createTopBar(), BorderLayout.NORTH);
 		if (myAdminStatus) {
 			for (Component c : myAnalystOnlyComponents) {
 				c.setEnabled(false);
@@ -162,7 +163,6 @@ public class GUI extends JFrame {
 		masterPanel.add(createEditPage(), "Edit");
 		masterPanel.add(createDraftsPage(), "Drafts");
 		add(masterPanel, BorderLayout.CENTER);
-		add(createTopBar(), BorderLayout.NORTH);
 		// show home page at application start
 		myCardLayout.show(masterPanel, "Home");
 		return masterPanel;

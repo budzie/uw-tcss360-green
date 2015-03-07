@@ -1,5 +1,7 @@
 package subpages;
 
+import java.awt.Dimension;
+
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -28,9 +30,11 @@ public class EditPage extends JPanel {
 		for (QA response : myLibrary.getAllResponses()) {
 			listPanel.add(new QADisplayPanel(this, response));
 		}
-		final JScrollPane scroll = new JScrollPane(listPanel,
+		final JScrollPane scroll = new JScrollPane(
 				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+				JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scroll.setViewportView(listPanel);
+		scroll.setPreferredSize(new Dimension(500, 500));
 		add(scroll);
 	}
 
