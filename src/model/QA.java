@@ -12,17 +12,28 @@ public class QA implements Serializable {
 	private final String myQuestion;
 
 	private final String myAnswer;
-	
+
 	private final List<String> myKeywords;
 
 	private final String myCategory;
 
-	public QA(final String question, final String answer, final List<String> keywords,
-			final String category) {
+	public QA(final String question, final String answer,
+			final List<String> keywords, final String category) {
 		myQuestion = question;
 		myAnswer = answer;
 		myKeywords = new ArrayList<String>(keywords);
 		myCategory = category;
+	}
+
+	public QA(final String category, final String question,
+			final String answer, final String keywords) {
+		myCategory = category;
+		myQuestion = question;
+		myAnswer = answer;
+		myKeywords = new ArrayList<String>();
+		for (String keyword : keywords.split(",")) {
+			myKeywords.add(keyword);
+		}
 	}
 
 	/**
@@ -38,9 +49,19 @@ public class QA implements Serializable {
 	public String getAnswer() {
 		return myAnswer;
 	}
-	
+
 	public List<String> getKeywords() {
 		return new ArrayList<String>(myKeywords);
+	}
+	
+	public String getKeywordString() {
+		final StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < myKeywords.size() - 1; i++) {
+			builder.append(myKeywords.get(i));
+			builder.append(',');
+		}
+		builder.append(myKeywords.get(myKeywords.size() - 1));
+		return builder.toString();
 	}
 
 	/**
@@ -52,7 +73,8 @@ public class QA implements Serializable {
 
 	@Override
 	public int hashCode() {
-		final String values = myAnswer + myQuestion + myCategory + myKeywords.toString();
+		final String values = myAnswer + myQuestion + myCategory
+				+ myKeywords.toString();
 		return values.hashCode() + 1;
 	}
 

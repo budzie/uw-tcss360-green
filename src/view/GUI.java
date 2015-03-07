@@ -242,7 +242,7 @@ public class GUI extends JFrame {
 	 */
 	private JPanel createEditPage() {
 		final JPanel panel = new JPanel(new BorderLayout());
-		panel.add(new EditPage());
+		panel.add(new EditPage(myLibrary));
 		return panel;
 	}
 

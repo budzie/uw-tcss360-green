@@ -99,6 +99,10 @@ public class Library implements Serializable {
 		}
 		myLibrary.remove(response);
 	}
+	
+	public List<QA> getAllResponses() {
+		return new ArrayList<QA>(myLibrary);
+	}
 
 	public void serialize() throws IOException {
 		final FileOutputStream fileOut = new FileOutputStream(LIBRARY_SAVE_FILE);
