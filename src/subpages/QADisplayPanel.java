@@ -19,6 +19,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import model.QA;
+import view.GUI;
 
 public class QADisplayPanel extends JPanel {
 
@@ -28,6 +29,8 @@ public class QADisplayPanel extends JPanel {
 	private static final Font LABEL_FONT = new Font(Font.SERIF, Font.PLAIN, 20);
 
 	private static final Dimension MAX_ELEMENT_SIZE = new Dimension(300, 1000);
+
+	private static final int SPACING = 10;
 
 	private final EditPage myParent;
 
@@ -73,10 +76,12 @@ public class QADisplayPanel extends JPanel {
 		});
 		leftPanel.add(Box.createVerticalGlue());
 		leftPanel.add(editButton);
-		leftPanel.add(Box.createVerticalStrut(10));
+		leftPanel.add(Box.createVerticalStrut(SPACING));
 		leftPanel.add(deleteButton);
 		leftPanel.add(Box.createVerticalGlue());
+		masterLeftPanel.add(Box.createHorizontalStrut(SPACING));
 		masterLeftPanel.add(leftPanel);
+		masterLeftPanel.add(Box.createHorizontalStrut(SPACING));
 		add(masterLeftPanel, BorderLayout.WEST);
 	}
 
@@ -85,21 +90,21 @@ public class QADisplayPanel extends JPanel {
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 		final JTextArea category = createTextElement("Category: " + myCategory,
 				CATEGORY_FONT);
-		final JTextArea questionLabel = createTextElement("Question", new Font(
-				Font.SERIF, Font.PLAIN, 20));
+		final JTextArea questionLabel = createTextElement("Question",
+				LABEL_FONT);
 		final JTextArea question = createTextElement(myQuestion, null);
 		final JTextArea answerLabel = createTextElement("Answer", LABEL_FONT);
 		final JTextArea answer = createTextElement(myAnswer, null);
 		final JTextArea keywordLabel = createTextElement("Keywords", LABEL_FONT);
 		final JTextArea keywords = createTextElement(myKeywords, null);
 		centerPanel.add(category);
-		centerPanel.add(Box.createVerticalStrut(15));
+		centerPanel.add(Box.createVerticalStrut(SPACING));
 		centerPanel.add(questionLabel);
 		centerPanel.add(question);
-		centerPanel.add(Box.createVerticalStrut(15));
+		centerPanel.add(Box.createVerticalStrut(SPACING));
 		centerPanel.add(answerLabel);
 		centerPanel.add(answer);
-		centerPanel.add(Box.createVerticalStrut(15));
+		centerPanel.add(Box.createVerticalStrut(SPACING));
 		centerPanel.add(keywordLabel);
 		centerPanel.add(keywords);
 		add(centerPanel, BorderLayout.CENTER);
@@ -107,7 +112,7 @@ public class QADisplayPanel extends JPanel {
 
 	private JTextArea createTextArea(final String text, final Font font) {
 		final JTextArea result = new JTextArea(text);
-		result.setMaximumSize(MAX_ELEMENT_SIZE);
+//		result.setMaximumSize(MAX_ELEMENT_SIZE);
 		result.setWrapStyleWord(true);
 		result.setLineWrap(true);
 		if (font == null) {
@@ -134,15 +139,19 @@ public class QADisplayPanel extends JPanel {
 
 	private class EditingPane extends JDialog {
 
+		private final Dimension myPreferredSize = new Dimension(
+				GUI.SCREEN_SIZE.width / 3, GUI.SCREEN_SIZE.height / 3);
+
 		public EditingPane() {
 			super();
 			setLayout(new BorderLayout());
 			setTitle("Edit Response");
 			setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			addContent();
+			setPreferredSize(myPreferredSize);
 			pack();
 			setLocationRelativeTo(null);
-			// setResizable(false);
+			setResizable(false);
 			setVisible(true);
 		}
 
@@ -152,15 +161,15 @@ public class QADisplayPanel extends JPanel {
 			final JTextArea categoryField = createTextArea(myCategory, null);
 			categoryField.getDocument().addDocumentListener(
 					new DocumentListener() {
-						public void changedUpdate(DocumentEvent arg0) {
+						public void changedUpdate(final DocumentEvent e) {
 							update();
 						}
 
-						public void insertUpdate(DocumentEvent arg0) {
+						public void insertUpdate(final DocumentEvent e) {
 							update();
 						}
 
-						public void removeUpdate(DocumentEvent arg0) {
+						public void removeUpdate(final DocumentEvent e) {
 							update();
 						}
 
@@ -173,15 +182,15 @@ public class QADisplayPanel extends JPanel {
 			final JTextArea questionArea = createTextArea(myQuestion, null);
 			questionArea.getDocument().addDocumentListener(
 					new DocumentListener() {
-						public void changedUpdate(DocumentEvent arg0) {
+						public void changedUpdate(final DocumentEvent e) {
 							update();
 						}
 
-						public void insertUpdate(DocumentEvent arg0) {
+						public void insertUpdate(final DocumentEvent e) {
 							update();
 						}
 
-						public void removeUpdate(DocumentEvent arg0) {
+						public void removeUpdate(final DocumentEvent e) {
 							update();
 						}
 
@@ -194,15 +203,15 @@ public class QADisplayPanel extends JPanel {
 			final JTextArea answerArea = createTextArea(myAnswer, null);
 			answerArea.getDocument().addDocumentListener(
 					new DocumentListener() {
-						public void changedUpdate(DocumentEvent arg0) {
+						public void changedUpdate(final DocumentEvent e) {
 							update();
 						}
 
-						public void insertUpdate(DocumentEvent arg0) {
+						public void insertUpdate(final DocumentEvent e) {
 							update();
 						}
 
-						public void removeUpdate(DocumentEvent arg0) {
+						public void removeUpdate(final DocumentEvent e) {
 							update();
 						}
 
@@ -215,15 +224,15 @@ public class QADisplayPanel extends JPanel {
 			final JTextArea keywordField = createTextArea(myKeywords, null);
 			keywordField.getDocument().addDocumentListener(
 					new DocumentListener() {
-						public void changedUpdate(DocumentEvent arg0) {
+						public void changedUpdate(final DocumentEvent e) {
 							update();
 						}
 
-						public void insertUpdate(DocumentEvent arg0) {
+						public void insertUpdate(final DocumentEvent e) {
 							update();
 						}
 
-						public void removeUpdate(DocumentEvent arg0) {
+						public void removeUpdate(final DocumentEvent e) {
 							update();
 						}
 
@@ -255,18 +264,17 @@ public class QADisplayPanel extends JPanel {
 			masterPanel.setLayout(new BoxLayout(masterPanel, BoxLayout.Y_AXIS));
 			masterPanel.add(categoryLabel);
 			masterPanel.add(categoryField);
-			masterPanel.add(Box.createVerticalStrut(10));
+			masterPanel.add(Box.createVerticalStrut(SPACING));
 			masterPanel.add(questionLabel);
 			masterPanel.add(questionArea);
-			masterPanel.add(Box.createVerticalStrut(10));
+			masterPanel.add(Box.createVerticalStrut(SPACING));
 			masterPanel.add(answerLabel);
 			masterPanel.add(answerArea);
-			masterPanel.add(Box.createVerticalStrut(10));
+			masterPanel.add(Box.createVerticalStrut(SPACING));
 			masterPanel.add(keywordLabel);
 			masterPanel.add(keywordField);
-			masterPanel.add(Box.createVerticalStrut(10));
+			masterPanel.add(Box.createVerticalStrut(SPACING));
 			masterPanel.add(new JSeparator());
-			masterPanel.setPreferredSize(new Dimension(300, 300));
 			final JScrollPane scroll = new JScrollPane(
 					JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 					JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);

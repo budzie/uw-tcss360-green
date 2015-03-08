@@ -5,6 +5,7 @@ import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -44,10 +45,11 @@ public class GUI extends JFrame {
 	 */
 	private static final int HOME_GAP = 10;
 
-	/**
-	 * The size of the GUI. The GUI is not resizeable.
-	 */
-	private static final Dimension SIZE = new Dimension(500, 500);
+	public static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit()
+			.getScreenSize();
+
+	private static final Dimension PREFERRED_SIZE = new Dimension(
+			SCREEN_SIZE.width / 2, SCREEN_SIZE.height / 2);
 
 	/**
 	 * A list of components that should be enabled only for administrators. As
@@ -106,8 +108,9 @@ public class GUI extends JFrame {
 		myLibrary = library;
 		myContentPanel = addContent();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setPreferredSize(PREFERRED_SIZE);
 		pack();
-//		setResizable(false);
+		setResizable(false);
 		setLocationRelativeTo(null);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(final WindowEvent event) {
@@ -281,7 +284,8 @@ public class GUI extends JFrame {
 		final GUI thisGUI = this;
 		exitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				dispatchEvent(new WindowEvent(thisGUI, WindowEvent.WINDOW_CLOSING));
+				dispatchEvent(new WindowEvent(thisGUI,
+						WindowEvent.WINDOW_CLOSING));
 			}
 		});
 		// user name label
