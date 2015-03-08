@@ -33,11 +33,8 @@ public class EditPage extends JPanel {
 	private void addContent() {
 		final JPanel listPanel = new JPanel();
 		listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
-		final List<QA> library = myLibrary.getAllResponses();
-		for (int i = 0; i < library.size(); i++) {
-			final QADisplayPanel responsePanel = new QADisplayPanel(this,
-					library.get(i));
-			listPanel.add(responsePanel);
+		for (QA response : myLibrary.getAllResponses()) {
+			listPanel.add(new QADisplayPanel(this, response));
 			listPanel.add(Box.createVerticalStrut(VERTICAL_SPACING));
 			listPanel.add(new JSeparator());
 			listPanel.add(Box.createVerticalStrut(VERTICAL_SPACING));

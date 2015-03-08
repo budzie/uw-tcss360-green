@@ -28,8 +28,6 @@ public class QADisplayPanel extends JPanel {
 
 	private static final Font LABEL_FONT = new Font(Font.SERIF, Font.PLAIN, 20);
 
-	private static final Dimension MAX_ELEMENT_SIZE = new Dimension(300, 1000);
-
 	private static final int SPACING = 10;
 
 	private final EditPage myParent;
@@ -112,7 +110,6 @@ public class QADisplayPanel extends JPanel {
 
 	private JTextArea createTextArea(final String text, final Font font) {
 		final JTextArea result = new JTextArea(text);
-//		result.setMaximumSize(MAX_ELEMENT_SIZE);
 		result.setWrapStyleWord(true);
 		result.setLineWrap(true);
 		if (font == null) {
