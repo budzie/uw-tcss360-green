@@ -2,8 +2,9 @@ package subpages;
 
 import java.awt.BorderLayout;
 import java.awt.Button;
-import java.awt.Component;
 import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,37 +12,25 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.AbstractButton;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
+import javax.swing.JEditorPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import model.Draft;
 import model.User;
-
-import java.awt.Dimension;
-import java.awt.ComponentOrientation;
-import java.awt.Color;
-import java.awt.GridLayout;
-
-import javax.swing.JEditorPane;
-import javax.swing.UIManager;
 
 /**
  * This class is a sub pnlMail of the GUI that constitutes the Drafts Page for
