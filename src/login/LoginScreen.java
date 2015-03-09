@@ -121,14 +121,14 @@ public class LoginScreen extends JFrame {
 			final int pin = Integer.parseInt(pWord);
 			final User validUser = myUsers.validateUser(person, pin);
 			if (validUser == null) {
-				throw new Exception();
+				throw new BadUserException();
 			}
 			final LoadingScreen loading = new LoadingScreen(validUser);
 			loading.setVisible(true);
 			myGUI.setUser(validUser, loading);
 			myLibrary.setUser(validUser);
 			dispose();
-		} catch (Exception e) {
+		} catch (BadUserException e) {
 			errorMessage();
 		}
 		// if (pWord.length() == 4) {
@@ -155,4 +155,6 @@ public class LoginScreen extends JFrame {
 		// }
 
 	}
+	
+	private class BadUserException extends Exception {}
 }
