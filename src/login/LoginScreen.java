@@ -18,6 +18,7 @@ import view.GUI;
 
 /**
  * @author Sally Budack
+ * @author Robert Ogden
  *
  */
 public class LoginScreen extends JFrame {
@@ -36,6 +37,12 @@ public class LoginScreen extends JFrame {
 	
 	private final Library myLibrary;
 
+	/**
+	 * LoginScreen
+	 * @param gui
+	 * @param users
+	 * @param library
+	 */
 	public LoginScreen(final GUI gui, final AllUsers users, final Library library) {
 		super("LoginScreen Authentification");
 		myGUI = gui;

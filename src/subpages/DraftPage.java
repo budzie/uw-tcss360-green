@@ -3,7 +3,9 @@ package subpages;
 import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Desktop;
+import java.awt.Desktop.Action;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -18,12 +20,13 @@ import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JEditorPane;
+import javax.swing.JFileChooser;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
@@ -38,11 +41,11 @@ import model.User;
  * and provides links in order to open them with the default system application.
  * The number of drafts is limited by the max number of drafts, per requirements
  * business rule.
- * 
+ * @author Sally Budack
  * @author Robert Ogden rogden33
  */
 public class DraftPage extends JPanel implements ListSelectionListener {
-
+	// components
 	JLabel title;
 	private JInternalFrame internalFrame;
 	private JDesktopPane desktopPane;
@@ -54,34 +57,27 @@ public class DraftPage extends JPanel implements ListSelectionListener {
 	private JPanel pnlApp;
 	private JTextField txtFldFile;
 	private JLabel lblFile;
-	private JPanel pnlDraft;
-
-	private JList<Draft> draftList;
-	private JPanel draftListpnl;
-	private JLabel lblDraftList;
 	private JButton btnFile;
-	private File myDraftFile;
-	// JFileChooser fc = new JFileChooser();
+		private JFileChooser fc = new JFileChooser();
 	private List<Draft> userDraftList;
 	File file;
 
 	private Desktop desktop;
-	private Desktop.Action action = Desktop.Action.OPEN;
 	private User myUser;
 	private Draft myDraft;
 	private JPanel listPanel;
 	private JPanel topPanel;
 	private JList<String> listbox;
-	private JScrollPane scrollPane;
 	private JButton addButton;
 	private JButton removeButton;
 	private Vector<String> listData;
 	private JLabel lblNewLabel;
-	private JEditorPane dtrpnDraftLimit;
-	private JTextField dataField;
+	private JEditorPane paneDraftLimit;
+	private Action action;
 
 	/**
 	 * DraftPage
+	 * constructor
 	 */
 	public DraftPage() {
 		super();
@@ -99,30 +95,26 @@ public class DraftPage extends JPanel implements ListSelectionListener {
 		}
 		// loadFrameIcon();
 		setVisible(true);
-
 	}
 
 	private void addContent() {
-		add(getInternalFrame());
+		add(getInternalFrame());// rather than a JFrame
 		add(getDesktopPane());
 		title = new JLabel("Drafts Page");
 		this.title.setHorizontalAlignment(SwingConstants.CENTER);
-		this.title.setBounds(211, 34, 87, 24);
+		this.title.setBounds(300, 20, 87, 24);
 		add(title);
 	}
 
 	private JInternalFrame getInternalFrame() {
 		if (internalFrame == null) {
 			internalFrame = new JInternalFrame("Draft Retriever");
-			internalFrame.setBounds(42, 69, 398, 206);
-			internalFrame.setNormalBounds(new Rectangle(20, 20, 150, 150));
+			internalFrame.setBounds(42, 50, 600, 250);
+			internalFrame.setNormalBounds(new Rectangle(20, 20, 250, 150));
 			internalFrame.getContentPane().add(getPanel(), BorderLayout.NORTH);
 			internalFrame.getContentPane().add(getPnlApp(), BorderLayout.SOUTH);
-			// internalFrame.getContentPane().add(getPnlDraft(),
-			// BorderLayout.WEST);
 			internalFrame.getContentPane().add(getListPanel(),
 					BorderLayout.CENTER);
-
 			internalFrame.setVisible(true);
 		}
 		return internalFrame;
@@ -202,23 +194,23 @@ public class DraftPage extends JPanel implements ListSelectionListener {
 		return lblFile;
 	}
 
-	private JPanel getPnlDraft() {
-		if (pnlDraft == null) {
-			pnlDraft = new JPanel();
-			pnlDraft.add(draftList);
-		}
-		return pnlDraft;
-	}
-
+	/**
+	 * setUser
+	 * @param user
+	 */
 	public void setUser(final User user) {
 		myUser = user;
 	}
 
+	/**
+	 * getUser
+	 * @return user logged in
+	 */
 	public User getUser() {
 		return myUser;
 	}
 
-	public JPanel getListPanel() {
+	private JPanel getListPanel() {
 		// Set the frame characteristics
 		listPanel = new JPanel();
 		this.listPanel.setLayout(new GridLayout(0, 2, 0, 0));
@@ -230,7 +222,9 @@ public class DraftPage extends JPanel implements ListSelectionListener {
 		listData = getList();
 		// Create a new listbox control
 		listbox = new JList<String>(listData);
-		this.listbox.setVisibleRowCount(5);
+		listbox.setVisibleRowCount(-1);
+		listbox.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+
 		this.listbox.setPreferredSize(new Dimension(150, 100));
 		this.listbox.setName("Active Drafts");
 		this.listbox.setBounds(new Rectangle(0, 0, 75, 25));
@@ -244,26 +238,87 @@ public class DraftPage extends JPanel implements ListSelectionListener {
 		// Create a new listbox control
 
 		listbox.addListSelectionListener(this);
+		listbox.addListSelectionListener(new ListSelectionListener() {
+//			int selection = listbox.getSelectedIndex();
+			public void valueChanged(ListSelectionEvent e) {			     
+				int selectedRow = e.getFirstIndex(); 
+				int idx = e.getFirstIndex();
+				int idx2 = e.getLastIndex();  //idx and idx2 should be the same if you set Single Cell
+				if(idx == idx2){
+					// get the string
+					Object workingCopy = listbox.getModel().getElementAt(selectedRow); 					
+//					String workingCopy = (String)listbox.getSelectedValue();
+					if (selectedRow >= 0) {
+						txtFldFile.setText(" ");
+						txtFldFile.setText((String) workingCopy);						
+					}			
+				}
+			}
+		});
+
 
 		CreateDataEntryPanel();
 		return listPanel;
 	}
 
-	public void CreateDataEntryPanel() {
+	private void CreateDataEntryPanel() {
 		// Create a panel to hold all other components
 		JPanel dataPanel = new JPanel();
 		dataPanel.setLayout(new BorderLayout());
 		topPanel.add(dataPanel, BorderLayout.SOUTH);
-
+		dataPanel.setLayout(new FlowLayout());
 		// Create some function buttons
 		addButton = new JButton("Add");
-		dataPanel.add(addButton, BorderLayout.WEST);
-		addButton.addActionListener((ActionListener) new DraftPage());
+		dataPanel.add(addButton);
+		addButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				if (event.getSource() == addButton) {
+					// Get the text field value
+					String stringValue = txtFldFile.getText();
+					//				dataField.setText("");
+					// Add this item to the list and refresh
+					if (stringValue != null) {
+
+						listData.addElement(stringValue);
+						listbox.setListData(listData);
+						//						scrollPane.revalidate();
+						//						scrollPane.repaint();
+					}
+				}
+
+			}
+
+		});
+
 		removeButton = new JButton("Delete");
-		dataPanel.add(removeButton, BorderLayout.EAST);
-		removeButton.addActionListener((ActionListener) new DraftPage());
+		dataPanel.add(removeButton);
+		removeButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				if (event.getSource() == removeButton) {
+					// Get the current selection
+					int selection = listbox.getSelectedIndex();
+					if (selection >= 0) {
+						// Add this item to the list and refresh
+						listData.removeElementAt(selection);
+						listbox.setListData(listData);
+						//					scrollPane.revalidate();
+						//						scrollPane.repaint();
+
+						// As a nice touch, select the next item
+						if (selection >= listData.size())
+							selection = listData.size() - 1;
+						listbox.setSelectedIndex(selection);
+					}
+				}
+
+			}
+
+		});
 		this.topPanel.add(getLblNewLabel(), BorderLayout.NORTH);
-		this.topPanel.add(getDtrpnDraftLimit(), BorderLayout.CENTER);
+		this.topPanel.add(getPaneDraftLimit(), BorderLayout.CENTER);
 	}
 
 	// Handler for list selection changes
@@ -271,64 +326,21 @@ public class DraftPage extends JPanel implements ListSelectionListener {
 		// See if this is a listbox selection and the
 		// event stream has settled
 		if (event.getSource() == listbox && !event.getValueIsAdjusting()) {
-			// Get the current selection and place it in the
-			// edit field
-			String stringValue = (String) listbox.getSelectedValue();
-			if (stringValue != null)
-				dataField.setText(stringValue);
+			listbox.getSelectedValue();
 		}
 	}
 
-	// Handler for button presses
-	public void actionPerformed(ActionEvent event) {
-		if (event.getSource() == addButton) {
-			// Get the text field value
-			String stringValue = dataField.getText();
-			dataField.setText("");
-
-			// Add this item to the list and refresh
-			if (stringValue != null) {
-				listData.addElement(stringValue);
-				listbox.setListData(listData);
-				scrollPane.revalidate();
-				scrollPane.repaint();
-			}
-		}
-
-		if (event.getSource() == removeButton) {
-			// Get the current selection
-			int selection = listbox.getSelectedIndex();
-			if (selection >= 0) {
-				// Add this item to the list and refresh
-				listData.removeElementAt(selection);
-				listbox.setListData(listData);
-				scrollPane.revalidate();
-				scrollPane.repaint();
-
-				// As a nice touch, select the next item
-				if (selection >= listData.size())
-					selection = listData.size() - 1;
-				listbox.setSelectedIndex(selection);
-			}
-		}
-	}
 
 	private Vector<String> getList() {
 		listData = new Vector<String>();
-		for (int i = 0; i < userDraftList.size(); i++) {
-			listData.add(userDraftList.get(i).getMyFilePath());
-		}
 		if (listData.size() == 0) {
 			listData.add(0, "You have not saved any drafts yet");
+		}else{
+			for (int i = 0; i < userDraftList.size(); i++) {
+				listData.add(userDraftList.get(i).getMyFilePath());
+			}
 		}
 		return listData;
-	}
-
-	private JLabel getLblDraftList() {
-		if (lblDraftList == null) {
-			lblDraftList = new JLabel("Draft List");
-		}
-		return lblDraftList;
 	}
 
 	private JButton getBtnFile() {
@@ -378,8 +390,8 @@ public class DraftPage extends JPanel implements ListSelectionListener {
 	}
 
 	/**
-	 * Launch the default application associated with a specific filename using
-	 * the preset Desktop.Action.
+	 * Launch the default application associated with a specific
+	 * filename using the preset Desktop.Action.
 	 *
 	 */
 	private void onLaunchDefaultApplication(ActionEvent evt) {
@@ -389,13 +401,15 @@ public class DraftPage extends JPanel implements ListSelectionListener {
 
 		try {
 			desktop.open(file);
-		} catch (IOException ioe) {
+		} catch (IOException ioe) {        	
 			ioe.printStackTrace();
-			System.out.println("Cannot perform the given operation to the "
-					+ file + " file");
+			System.out.println("Cannot perform the given operation to the " + file + " file");
 		}
 		myDraft.setMyFilePath(fileName);
 	}
+
+
+
 
 	/**
 	 * Launch the default email client using the "mailto" protocol and the text
@@ -424,14 +438,14 @@ public class DraftPage extends JPanel implements ListSelectionListener {
 	 *
 	 */
 	private File onChooseFile(ActionEvent evt) {
-		// if (evt.getSource() == btnFile) {
-		// int returnVal = fc.showOpenDialog(DraftPage.this);
-		// if (returnVal == JFileChooser.APPROVE_OPTION){
-		// file = fc.getSelectedFile();
-		// txtFldFile.setText(file.getAbsolutePath());
-		//
-		// }
-		// }
+				if (evt.getSource() == btnFile) {
+					int returnVal = fc.showOpenDialog(DraftPage.this);
+					if (returnVal == JFileChooser.APPROVE_OPTION){
+						file = fc.getSelectedFile();
+						txtFldFile.setText(file.getAbsolutePath());
+		
+					}
+				}
 		return file;
 	}
 
@@ -473,13 +487,14 @@ public class DraftPage extends JPanel implements ListSelectionListener {
 		return lblNewLabel;
 	}
 
-	private JEditorPane getDtrpnDraftLimit() {
-		dtrpnDraftLimit = new JEditorPane();
-		dtrpnDraftLimit.setBackground(UIManager.getColor("Button.background"));
-		dtrpnDraftLimit.setBackground(UIManager.getColor("CheckBox.light"));
-		dtrpnDraftLimit.setEditable(false);
-		dtrpnDraftLimit
-				.setText("Maximum Drafts permitted is 3. When you complete a draft, delete it so you may add more.");
-		return dtrpnDraftLimit;
+	private JEditorPane getPaneDraftLimit() {
+		paneDraftLimit = new JEditorPane();
+		paneDraftLimit.setBackground(UIManager.getColor("Button.background"));
+		paneDraftLimit.setBackground(UIManager.getColor("CheckBox.light"));
+		paneDraftLimit.setEditable(false);
+		paneDraftLimit
+		.setText("Maximum Drafts permitted is 3. \nWhen you complete a draft, \ndelete it so you may add more."
+				+ "\nClick on the draft in the list you want to open,\n then Launch Application ");
+		return paneDraftLimit;
 	}
 }
