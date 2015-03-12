@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
@@ -82,6 +83,7 @@ public class DraftPage extends JPanel implements ListSelectionListener {
 	// button to remove drafts from list
 	private JButton removeButton;
 	private Vector<String> listData;
+	private ArrayList<String> fileDisplayName;
 	// panel for draft info
 	private JEditorPane paneDraftLimit;
 	private Action action;
@@ -453,6 +455,7 @@ public class DraftPage extends JPanel implements ListSelectionListener {
 		listData = getList();
 		// Create the data model for this example
 		listData = new Vector<String>();
+		fileDisplayName = new ArrayList<String>();
 		CreateDataEntryPanel();
 		return listPanel;
 	}
@@ -495,6 +498,7 @@ public class DraftPage extends JPanel implements ListSelectionListener {
 					if (stringValue != null && stringValue.length() > 1 
 							&& listData.size() < 3) {
 						listData.addElement(stringValue);
+						fileDisplayName.add(draftName);
 						//	listbox.setListData(listData);
 						displayDraft();	
 						panelManageDrafts.repaint();
@@ -542,24 +546,30 @@ public class DraftPage extends JPanel implements ListSelectionListener {
 	private void displayDraft() {				
 		if(listData.size() == 1){
 			txtDraft1.setText(listData.get(0));
-			lblDraft1.setText(draftName);
+			lblDraft1.setText(fileDisplayName.get(0));
 			txtDraft2.setText(" ");
 			lblDraft2.setText("Draft 2");
 			txtDraft3.setText(" ");
 			lblDraft3.setText("Draft 3");
+			rdbtnDraft1.setSelected(true); 
 		}
 		if(listData.size() == 2){
 			txtDraft1.setText(listData.get(0));
+			lblDraft1.setText(fileDisplayName.get(0));
 			txtDraft2.setText(listData.get(1));
-			lblDraft2.setText(draftName);
+			lblDraft2.setText(fileDisplayName.get(1));
 			txtDraft3.setText(" ");
 			lblDraft3.setText("Draft 3");
+			rdbtnDraft2.setSelected(true); 
 		}
 		if(listData.size() == 3){
 			txtDraft1.setText(listData.get(0));
+			lblDraft1.setText(fileDisplayName.get(0));
 			txtDraft2.setText(listData.get(1));
+			lblDraft2.setText(fileDisplayName.get(1));
 			txtDraft3.setText(listData.get(2));
-			lblDraft3.setText(draftName);
+			lblDraft3.setText(fileDisplayName.get(2));
+			rdbtnDraft3.setSelected(true); 
 		}
 	}
 
