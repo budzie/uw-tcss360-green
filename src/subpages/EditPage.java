@@ -1,10 +1,12 @@
 package subpages;
 
 import java.awt.BorderLayout;
-import java.util.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -21,7 +23,7 @@ import model.QA;
 public class EditPage extends JPanel {
 
 	private static final int VERTICAL_SPACING = 20;
-	
+
 	private final Library myLibrary;
 
 	public EditPage(final Library library) {
@@ -44,6 +46,20 @@ public class EditPage extends JPanel {
 				JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scroll.setViewportView(listPanel);
 		add(scroll, BorderLayout.CENTER);
+		final JButton addButton = new JButton("Add Response");
+		final EditPage myself = this;
+		addButton.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				new EditingPane(myself, null, "", "", "", "");
+			}
+		});
+		add(addButton, BorderLayout.SOUTH);
+		System.out.println("Added content");
+	}
+
+	public void addResponse(final QA response) {
+		myLibrary.addResponse(response);
+		repaint();
 	}
 
 	public void deleteResponse(final QA response) {
@@ -55,5 +71,13 @@ public class EditPage extends JPanel {
 		myLibrary.removeResponse(old);
 		myLibrary.addResponse(updated);
 		repaint();
+	}
+
+	@Override
+	public void repaint() {
+		if (myLibrary != null) {
+			addContent();
+		}
+		super.repaint();
 	}
 }
