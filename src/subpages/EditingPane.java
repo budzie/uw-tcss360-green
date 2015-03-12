@@ -139,7 +139,7 @@ public class EditingPane extends JDialog {
 			}
 
 			private void update() {
-				myKeywords = answerArea.getText();
+				myKeywords = keywordField.getText();
 			}
 		});
 		final JPanel buttonPanel = new JPanel();

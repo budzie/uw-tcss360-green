@@ -54,30 +54,31 @@ public class EditPage extends JPanel {
 			}
 		});
 		add(addButton, BorderLayout.SOUTH);
-		System.out.println("Added content");
 	}
 
 	public void addResponse(final QA response) {
 		myLibrary.addResponse(response);
+		removeAll();
+		addContent();
+		revalidate();
 		repaint();
 	}
 
 	public void deleteResponse(final QA response) {
 		myLibrary.removeResponse(response);
+		removeAll();
+		addContent();
+		revalidate();
 		repaint();
 	}
 
 	public void replace(final QA old, final QA updated) {
 		myLibrary.removeResponse(old);
 		myLibrary.addResponse(updated);
+		removeAll();
+		addContent();
+		revalidate();
 		repaint();
 	}
 
-	@Override
-	public void repaint() {
-		if (myLibrary != null) {
-			addContent();
-		}
-		super.repaint();
-	}
 }
