@@ -1,0 +1,1 @@
+This Project will house source code and team information. It will also provide a wiki of project information that will be available. Project should be made public.
